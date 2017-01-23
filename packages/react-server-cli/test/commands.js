@@ -15,15 +15,32 @@ const tmpPath = path.join(__dirname, 'tmp');
 
 test('test', async t => {
 	process.chdir(`${__dirname}/fixtures/commands/start-basic/in-files`);
-	const server = child_process.spawn(process.execPath, [path.join(__dirname, '..', 'bin', 'react-server-cli'), 'start']);
 
-	server.stderr.on('data', stderr => process.stderr.write(stderr));
-	server.stdout.on('data', stdout => process.stdout.write(stdout));
+	const server = child_process.spawn(
+		process.execPath,
+		[
+			path.join(__dirname, '..', 'bin', 'react-server-cli'),
+			'start'
+		]
+	);
+
+	let fullStdout = '';
+	server.stdout.on('data', stdout => fullStdout += stdout);
+
+	const expectedStdout = 'Started HTML server over HTTP on';
+	const frequency = 100;
+	let elapsed = 0;
 
 	await new Promise(resolve => {
-		setTimeout(() => {
+		const checkForExpectedStdout = setInterval(() => {
+			if (!fullStdout.includes(expectedStdout) && elapsed < 5000) return elapsed += frequency;
+			clearInterval(checkForExpectedStdout);
 			resolve();
-			server.kill();
-		}, 3000);
+		}, frequency);
 	});
+
+	process.stdout.write(fullStdout);
+
+	t.true(fullStdout.includes(expectedStdout), 'stdout includes server start notice');
+	server.kill();
 });
