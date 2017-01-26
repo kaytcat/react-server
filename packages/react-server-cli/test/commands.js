@@ -11,7 +11,9 @@ const fixturesPath = path.join(__dirname, 'fixtures', 'commands');
 fs.readdirSync(fixturesPath).forEach(testName => {
 	if (testName[0] === '.') return;
 
-	test(`${testName} command`, async t => {
+	const [, command, testType] = testName.match(/([^-]+)-(.+)/);
+
+	test(`${command} command: ${testType}`, async t => {
 		const testPath = path.join(fixturesPath, testName);
 		const tmpPath = path.join(testPath, 'tmp');
 		changeToTempDir(tmpPath);
