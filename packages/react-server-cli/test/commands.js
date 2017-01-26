@@ -16,7 +16,7 @@ fs.readdirSync(fixturesPath).forEach(testName => {
 	test(`${command} command: ${testType}`, async t => {
 		const testPath = path.join(fixturesPath, testName);
 		const tmpPath = path.join(testPath, 'tmp');
-		changeToTempDir(tmpPath);
+		createAndChangeToTempDir(tmpPath);
 
 		Object.entries(readDir(path.join(testPath, 'in-files')))
 			.forEach(([filename, content]) =>
@@ -59,12 +59,12 @@ fs.readdirSync(fixturesPath).forEach(testName => {
 
 		server.kill();
 
-		// Clean up again after the test
+		// Remove temporary directory after the test
 		rimraf.sync(tmpPath);
 	});
 });
 
-function changeToTempDir(tmpPath){
+function createAndChangeToTempDir(tmpPath){
 	if (fs.existsSync(tmpPath)) rimraf.sync(tmpPath);
 	fs.mkdirSync(tmpPath);
 	process.chdir(tmpPath);
