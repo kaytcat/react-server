@@ -18,6 +18,7 @@ fs.readdirSync(fixturesPath).forEach(testName => {
 		const tmpPath = path.join(testPath, 'tmp');
 		createAndChangeToTempDir(tmpPath);
 
+		// Write files to temporary location
 		Object.entries(readDir(path.join(testPath, 'in-files')))
 			.forEach(([filename, content]) =>
 				outputFileSync(filename, content)
