@@ -48,9 +48,20 @@ fs.readdirSync(fixturesPath).forEach(testName => {
 		let elapsed = 0;
 
 		await new Promise(resolve => {
-			const checkForExpectedStdout = setInterval(() => {
-				if (!stdout.includes(stdoutIncludes) && elapsed < 5000) return elapsed += frequency;
-				clearInterval(checkForExpectedStdout);
+			const checkForExpectedOutput = setInterval(() => {
+				// Increment the elapsed time if neither stdout nor stderr includes the expected content and the time limit hasn't been reached.
+				if (
+					(
+						(stdoutIncludes && !stdout.includes(stdoutIncludes)) ||
+						(stderrIncludes && !stderr.includes(stderrIncludes))
+					) &&
+					elapsed < 5000
+				) {
+					elapsed += frequency;
+					return;
+				}
+
+				clearInterval(checkForExpectedOutput);
 				resolve();
 			}, frequency);
 		});
