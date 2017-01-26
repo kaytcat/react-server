@@ -1,3 +1,5 @@
 {
-	"routesFile": "routes.js"
+	"routesFile": "customRoutes.js",
+	"port": 4000,
+	"jsPort": 4001
 }

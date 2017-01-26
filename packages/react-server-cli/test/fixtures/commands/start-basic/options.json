@@ -1,3 +1,4 @@
 {
-	"args": ["start"]
+	"args": ["start"],
+	"stdoutIncludes": "Started HTML server over HTTP on"
 }
